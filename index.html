@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CineLatino Xbox</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --rojo: #e8001c;
+  --rojo2: #ff3348;
+  --negro: #07070d;
+  --gris1: #0f0f1a;
+  --gris2: #16162a;
+  --gris3: #1e1e35;
+  --gris4: #2c2c48;
+  --blanco: #eeeeff;
+  --apagado: #7777aa;
+  --cyan: #00d4ff;
+  --verde: #00e676;
+  --oro: #ffb300;
+  --foco: #00d4ff;
+  --tv-scale: 1;
+}
+
+.modo-tv {
+  --tv-scale: 1.22;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--negro);
+  color: var(--blanco);
+  font-family: 'Barlow', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+  font-size: calc(16px * var(--tv-scale));
+}
+
+/* Fondo */
+body::before {
+  content:'';
+  position:fixed; inset:0;
+  background:
+    radial-gradient(ellipse 90% 50% at 15% 0%, rgba(232,0,28,0.13) 0%, transparent 55%),
+    radial-gradient(ellipse 70% 60% at 85% 100%, rgba(0,212,255,0.08) 0%, transparent 55%),
+    repeating-linear-gradient(0deg, transparent, transparent 60px, rgba(255,255,255,0.012) 60px, rgba(255,255,255,0.012) 61px);
+  pointer-events:none; z-index:0;
+}
+
+.wrap { position:relative; z-index:1; max-width:1400px; margin:0 auto; }
+
+/* ─── HEADER ─── */
+header {
+  display:flex; align-items:center; justify-content:space-between;
+  padding: calc(24px * var(--tv-scale)) calc(48px * var(--tv-scale));
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  position:sticky; top:0; z-index:100;
+  background: rgba(7,7,13,0.92);
+  backdrop-filter: blur(20px);
+}
+
+.logo-wrap { display:flex; align-items:baseline; gap:12px; }
+
+.logo {
+  font-family:'Bebas Neue',sans-serif;
+  font-size: calc(2.6rem * var(--tv-scale));
+  letter-spacing:4px;
+  background: linear-gradient(135deg, #fff 0%, var(--rojo2) 60%, var(--oro) 100%);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+}
+
+.logo-sub {
+  font-size: calc(0.7rem * var(--tv-scale));
+  font-weight:700; letter-spacing:2px;
+  color: var(--apagado);
+  text-transform:uppercase;
+}
+
+.header-acciones { display:flex; gap:12px; align-items:center; }
+
+/* Botón modo TV */
+.btn-tv {
+  background: var(--gris3);
+  border: 2px solid var(--gris4);
+  border-radius: 10px;
+  padding: calc(10px * var(--tv-scale)) calc(18px * var(--tv-scale));
+  color: var(--blanco);
+  font-family:'Barlow',sans-serif;
+  font-size: calc(0.85rem * var(--tv-scale));
+  font-weight:700;
+  cursor:pointer;
+  transition: all 0.2s;
+  letter-spacing:1px;
+}
+
+.btn-tv:hover, .btn-tv:focus { background:var(--gris4); border-color:var(--cyan); outline:none; }
+.btn-tv.activo { background:var(--cyan); border-color:var(--cyan); color:var(--negro); }
+
+/* ─── HINT CONTROL ─── */
+.hint-control {
+  display:flex; gap:16px; align-items:center;
+  padding: calc(10px * var(--tv-scale)) calc(48px * var(--tv-scale));
+  background: rgba(0,212,255,0.05);
+  border-bottom: 1px solid rgba(0,212,255,0.1);
+  font-size: calc(0.75rem * var(--tv-scale));
+  color: var(--apagado);
+  flex-wrap:wrap;
+}
+
+.hint { display:flex; align-items:center; gap:6px; }
+.tecla {
+  background:var(--gris3); border:1px solid var(--gris4);
+  border-radius:5px; padding:2px 8px;
+  font-family:'Bebas Neue',sans-serif; font-size:0.85em;
+  color:var(--cyan); letter-spacing:1px;
+}
+
+/* ─── BUSCADOR ─── */
+.buscador-section {
+  padding: calc(36px * var(--tv-scale)) calc(48px * var(--tv-scale)) calc(20px * var(--tv-scale));
+}
+
+.buscador-label {
+  font-family:'Bebas Neue',sans-serif;
+  font-size: calc(1rem * var(--tv-scale));
+  letter-spacing:3px; color:var(--apagado);
+  margin-bottom:14px;
+}
+
+.buscador-row { display:flex; gap:12px; }
+
+#campoBusqueda {
+  flex:1;
+  background: var(--gris2);
+  border: 2px solid var(--gris3);
+  border-radius: 14px;
+  padding: calc(18px * var(--tv-scale)) calc(26px * var(--tv-scale));
+  font-family:'Barlow',sans-serif;
+  font-size: calc(1.2rem * var(--tv-scale));
+  font-weight:600;
+  color:var(--blanco);
+  outline:none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+#campoBusqueda:focus {
+  border-color:var(--rojo);
+  box-shadow: 0 0 0 4px rgba(232,0,28,0.18), inset 0 0 20px rgba(232,0,28,0.04);
+}
+
+#campoBusqueda::placeholder { color:var(--apagado); }
+
+.btn-buscar {
+  background: linear-gradient(135deg, var(--rojo) 0%, var(--rojo2) 100%);
+  border:none; border-radius:14px;
+  padding: calc(18px * var(--tv-scale)) calc(40px * var(--tv-scale));
+  color:#fff;
+  font-family:'Bebas Neue',sans-serif;
+  font-size: calc(1.5rem * var(--tv-scale));
+  letter-spacing:2px;
+  cursor:pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+  box-shadow: 0 4px 24px rgba(232,0,28,0.4);
+  flex-shrink:0;
+}
+
+.btn-buscar:hover, .btn-buscar:focus {
+  transform:scale(1.05);
+  box-shadow:0 8px 32px rgba(232,0,28,0.55);
+  outline:none;
+}
+
+/* ─── HISTORIAL ─── */
+#historialWrap {
+  padding: 0 calc(48px * var(--tv-scale)) calc(16px * var(--tv-scale));
+  display:none;
+}
+
+.historial-titulo {
+  font-size: calc(0.75rem * var(--tv-scale));
+  font-weight:700; letter-spacing:2px;
+  color:var(--apagado); margin-bottom:10px;
+  text-transform:uppercase;
+}
+
+.historial-chips { display:flex; gap:8px; flex-wrap:wrap; }
+
+.chip-historial {
+  background:var(--gris2);
+  border:1px solid var(--gris3);
+  border-radius:20px;
+  padding: calc(6px * var(--tv-scale)) calc(16px * var(--tv-scale));
+  font-size: calc(0.85rem * var(--tv-scale));
+  font-weight:600;
+  color:var(--blanco);
+  cursor:pointer;
+  transition:all 0.18s;
+  display:flex; align-items:center; gap:8px;
+}
+
+.chip-historial:hover, .chip-historial:focus {
+  border-color:var(--cyan);
+  color:var(--cyan);
+  outline:none;
+}
+
+.chip-x {
+  color:var(--apagado); font-size:0.9em;
+  padding: 0 2px;
+  transition: color 0.15s;
+}
+.chip-x:hover { color:var(--rojo); }
+
+/* ─── FILTROS ─── */
+.filtros-wrap {
+  padding: calc(8px * var(--tv-scale)) calc(48px * var(--tv-scale)) calc(24px * var(--tv-scale));
+  display:flex; gap:10px; flex-wrap:wrap;
+}
+
+.filtro-btn {
+  background:var(--gris2);
+  border:2px solid var(--gris3);
+  border-radius:30px;
+  padding: calc(9px * var(--tv-scale)) calc(24px * var(--tv-scale));
+  color:var(--apagado);
+  font-family:'Barlow',sans-serif; font-weight:700;
+  font-size: calc(0.88rem * var(--tv-scale));
+  cursor:pointer;
+  transition:all 0.18s; letter-spacing:0.5px;
+}
+
+.filtro-btn:hover, .filtro-btn.activo {
+  background:var(--rojo); border-color:var(--rojo); color:#fff;
+  transform:translateY(-2px);
+}
+
+.filtro-btn:focus { outline:3px solid var(--foco); outline-offset:3px; }
+
+/* ─── NOVEDADES ─── */
+.seccion-titulo {
+  font-family:'Bebas Neue',sans-serif;
+  font-size: calc(1.5rem * var(--tv-scale));
+  letter-spacing:3px;
+  padding: 0 calc(48px * var(--tv-scale)) calc(18px * var(--tv-scale));
+  display:flex; align-items:center; gap:14px;
+}
+
+.seccion-titulo .badge-nuevo {
+  font-family:'Barlow',sans-serif;
+  font-size: calc(0.65rem * var(--tv-scale));
+  font-weight:900; letter-spacing:2px;
+  background:var(--rojo); color:#fff;
+  padding:3px 10px; border-radius:4px;
+  animation: pulso 2s infinite;
+}
+
+@keyframes pulso {
+  0%,100%{ box-shadow:0 0 0 0 rgba(232,0,28,0.5); }
+  50%{ box-shadow:0 0 0 8px rgba(232,0,28,0); }
+}
+
+.novedades-scroll {
+  display:flex; gap:14px;
+  padding: 0 calc(48px * var(--tv-scale)) calc(36px * var(--tv-scale));
+  overflow-x:auto;
+  scrollbar-width:thin; scrollbar-color:var(--gris4) transparent;
+}
+
+.novedad-card {
+  background:var(--gris2);
+  border:2px solid var(--gris3);
+  border-radius:14px;
+  padding: calc(16px * var(--tv-scale)) calc(20px * var(--tv-scale));
+  min-width: calc(200px * var(--tv-scale));
+  flex-shrink:0;
+  cursor:pointer;
+  transition:all 0.2s;
+  text-decoration:none; color:var(--blanco);
+  display:block;
+}
+
+.novedad-card:hover, .novedad-card:focus {
+  transform:translateY(-5px);
+  border-color:var(--oro);
+  box-shadow:0 10px 30px rgba(0,0,0,0.4);
+  outline:none;
+}
+
+.novedad-emoji { font-size: calc(2rem * var(--tv-scale)); margin-bottom:8px; display:block; }
+.novedad-titulo {
+  font-weight:900; font-size: calc(0.95rem * var(--tv-scale));
+  line-height:1.2; margin-bottom:6px;
+}
+.novedad-plat {
+  font-size: calc(0.72rem * var(--tv-scale));
+  color:var(--apagado); font-weight:600;
+}
+.novedad-tipo {
+  display:inline-block; margin-top:8px;
+  font-size: calc(0.67rem * var(--tv-scale));
+  font-weight:800; letter-spacing:1px;
+  padding:2px 8px; border-radius:4px;
+}
+.novedad-tipo.peli { background:rgba(232,0,28,0.2); color:var(--rojo2); }
+.novedad-tipo.serie { background:rgba(0,212,255,0.15); color:var(--cyan); }
+
+/* ─── PLATAFORMAS ─── */
+.plataformas-grid {
+  display:grid;
+  grid-template-columns: repeat(auto-fill, minmax(calc(260px * var(--tv-scale)), 1fr));
+  gap:16px;
+  padding: 0 calc(48px * var(--tv-scale)) calc(48px * var(--tv-scale));
+}
+
+.plat-card {
+  background:var(--gris2);
+  border:2px solid var(--gris3);
+  border-radius:16px;
+  padding: calc(20px * var(--tv-scale)) calc(22px * var(--tv-scale));
+  cursor:pointer; transition:all 0.2s;
+  text-decoration:none;
+  display:block; position:relative; overflow:hidden;
+}
+
+.plat-card::after {
+  content:'';
+  position:absolute; inset:0;
+  background:var(--ac, var(--rojo));
+  opacity:0; transition:opacity 0.2s;
+}
+
+.plat-card:hover, .plat-card:focus {
+  border-color:var(--ac, var(--rojo));
+  transform:translateY(-4px) scale(1.02);
+  box-shadow:0 10px 36px rgba(0,0,0,0.45);
+  outline:none;
+}
+
+.plat-card:hover::after { opacity:0.07; }
+
+.plat-top {
+  display:flex; justify-content:space-between; align-items:flex-start;
+  margin-bottom:10px; position:relative; z-index:1;
+}
+
+.plat-icon { font-size: calc(2rem * var(--tv-scale)); }
+
+.btn-fav {
+  background:none; border:none; cursor:pointer;
+  font-size: calc(1.2rem * var(--tv-scale));
+  transition:transform 0.2s;
+  padding:4px;
+  color:var(--apagado);
+  filter:grayscale(1);
+}
+
+.btn-fav.activo { color:var(--oro); filter:none; }
+.btn-fav:hover { transform:scale(1.3); filter:none; }
+
+.plat-nombre {
+  font-family:'Bebas Neue',sans-serif;
+  font-size: calc(1.35rem * var(--tv-scale));
+  letter-spacing:2px;
+  position:relative; z-index:1;
+}
+
+.plat-desc {
+  font-size: calc(0.8rem * var(--tv-scale));
+  color:var(--apagado); margin-top:5px; line-height:1.4;
+  position:relative; z-index:1;
+}
+
+.plat-footer {
+  display:flex; align-items:center; justify-content:space-between;
+  margin-top:12px; position:relative; z-index:1;
+}
+
+.plat-tag {
+  font-size: calc(0.68rem * var(--tv-scale)); font-weight:800;
+  letter-spacing:1px; padding:3px 10px; border-radius:20px;
+}
+
+.plat-tag.gratis { background:rgba(0,230,118,0.15); color:var(--verde); }
+.plat-tag.premium { background:rgba(232,0,28,0.15); color:var(--rojo2); }
+.plat-tag.mix { background:rgba(255,179,0,0.12); color:var(--oro); }
+
+.plat-abrir {
+  font-size: calc(0.72rem * var(--tv-scale)); font-weight:700;
+  color:var(--apagado); letter-spacing:1px;
+  display:flex; align-items:center; gap:4px;
+}
+
+/* ─── RESULTADOS ─── */
+#panelResultados { display:none; padding:0 calc(48px * var(--tv-scale)) calc(40px * var(--tv-scale)); }
+
+.res-titulo {
+  font-family:'Bebas Neue',sans-serif;
+  font-size: calc(1.5rem * var(--tv-scale));
+  letter-spacing:3px; margin-bottom:18px;
+  display:flex; align-items:center; gap:14px;
+}
+
+.res-subtitulo {
+  font-family:'Barlow',sans-serif;
+  font-size: calc(0.85rem * var(--tv-scale));
+  color:var(--apagado); font-weight:600; letter-spacing:0;
+}
+
+.links-grid {
+  display:grid;
+  grid-template-columns: repeat(auto-fill, minmax(calc(280px * var(--tv-scale)), 1fr));
+  gap:12px;
+}
+
+.link-card {
+  background:var(--gris2);
+  border:2px solid var(--gris3);
+  border-radius:14px;
+  padding: calc(16px * var(--tv-scale)) calc(20px * var(--tv-scale));
+  text-decoration:none; color:var(--blanco);
+  display:flex; align-items:center; gap:14px;
+  transition:all 0.2s; cursor:pointer;
+}
+
+.link-card:hover, .link-card:focus {
+  border-color:var(--cyan);
+  background:rgba(0,212,255,0.05);
+  transform:translateX(6px);
+  box-shadow:0 4px 20px rgba(0,212,255,0.12);
+  outline:none;
+}
+
+.link-icon { font-size: calc(1.8rem * var(--tv-scale)); flex-shrink:0; }
+.link-info strong { display:block; font-size: calc(0.95rem * var(--tv-scale)); font-weight:800; }
+.link-info small { color:var(--apagado); font-size: calc(0.75rem * var(--tv-scale)); }
+.link-flecha { margin-left:auto; color:var(--apagado); font-size: calc(1.1rem * var(--tv-scale)); flex-shrink:0; }
+
+/* ─── SEPARADOR ─── */
+.sep {
+  height:1px;
+  background:linear-gradient(90deg,transparent,var(--gris4),transparent);
+  margin: 0 calc(48px * var(--tv-scale)) calc(36px * var(--tv-scale));
+}
+
+/* ─── TOAST ─── */
+#toast {
+  position:fixed; bottom:40px; left:50%; transform:translateX(-50%) translateY(20px);
+  background:var(--gris3); border:1px solid var(--gris4);
+  border-radius:30px; padding:12px 28px;
+  font-weight:700; font-size:0.9rem;
+  opacity:0; transition:all 0.3s; z-index:999;
+  pointer-events:none; white-space:nowrap;
+}
+#toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+
+/* ─── FOOTER ─── */
+footer {
+  text-align:center;
+  padding: calc(20px * var(--tv-scale));
+  color:var(--apagado); font-size: calc(0.78rem * var(--tv-scale));
+  border-top:1px solid var(--gris3);
+}
+
+/* Focus universal */
+a:focus-visible, button:focus-visible, input:focus-visible {
+  outline:3px solid var(--foco); outline-offset:3px;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width:6px; height:6px; }
+::-webkit-scrollbar-track { background:transparent; }
+::-webkit-scrollbar-thumb { background:var(--gris4); border-radius:3px; }
+
+/* Animación entrada */
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(18px); }
+  to { opacity:1; transform:translateY(0); }
+}
+.plat-card, .novedad-card, .link-card {
+  animation: fadeUp 0.4s ease both;
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- HEADER -->
+<header>
+  <div class="logo-wrap">
+    <div class="logo">🎬 CineLatino</div>
+    <div class="logo-sub">Xbox Series · Español Latino</div>
+  </div>
+  <div class="header-acciones">
+    <button class="btn-tv" id="btnTV" onclick="toggleTV()" title="Modo TV: texto más grande">
+      📺 MODO TV
+    </button>
+  </div>
+</header>
+
+<!-- HINT CONTROL XBOX -->
+<div class="hint-control">
+  <span class="hint"><span class="tecla">TAB</span> Navegar</span>
+  <span class="hint"><span class="tecla">ENTER</span> Abrir</span>
+  <span class="hint"><span class="tecla">⭐</span> Favorito</span>
+  <span class="hint"><span class="tecla">↑↓</span> Scroll</span>
+  <span class="hint"><span class="tecla">📺</span> Modo TV para ver desde el sillón</span>
+</div>
+
+<!-- BUSCADOR -->
+<div class="buscador-section">
+  <div class="buscador-label">¿QUÉ QUERÉS VER HOY?</div>
+  <div class="buscador-row">
+    <input type="text" id="campoBusqueda"
+      placeholder="Escribí el nombre de una película o serie..."
+      autocomplete="off" autofocus />
+    <button class="btn-buscar" onclick="buscar()" id="btnBuscar">BUSCAR</button>
+  </div>
+</div>
+
+<!-- HISTORIAL -->
+<div id="historialWrap">
+  <div class="historial-titulo">🕐 Búsquedas recientes</div>
+  <div class="historial-chips" id="historialChips"></div>
+</div>
+
+<!-- FILTROS -->
+<div class="filtros-wrap">
+  <button class="filtro-btn activo" onclick="setFiltro(this,'todo')">🎬 Todo</button>
+  <button class="filtro-btn" onclick="setFiltro(this,'pelicula')">🍿 Películas</button>
+  <button class="filtro-btn" onclick="setFiltro(this,'serie')">📺 Series</button>
+  <button class="filtro-btn" onclick="setFiltro(this,'gratis')">🆓 Gratis</button>
+  <button class="filtro-btn" onclick="setFiltro(this,'favorito')">⭐ Favoritos</button>
+</div>
+
+<!-- RESULTADOS -->
+<div id="panelResultados">
+  <div class="res-titulo">
+    BUSCAR EN <span class="res-subtitulo" id="resSubtitulo"></span>
+  </div>
+  <div class="links-grid" id="listaLinks"></div>
+</div>
+
+<div class="sep" id="sepResultados" style="display:none"></div>
+
+<!-- NOVEDADES -->
+<div class="seccion-titulo">
+  NOVEDADES <span class="badge-nuevo">ESTA SEMANA</span>
+</div>
+<div class="novedades-scroll" id="novedadesScroll"></div>
+
+<div class="sep"></div>
+
+<!-- PLATAFORMAS -->
+<div class="seccion-titulo" id="titPlataformas">PLATAFORMAS</div>
+<div class="plataformas-grid" id="gridPlataformas"></div>
+
+<footer>
+  CineLatino Xbox · Optimizado para Microsoft Edge en Xbox Series · Español Latino
+</footer>
+
+</div><!-- /wrap -->
+
+<div id="toast"></div>
+
+<script>
+// ─── DATOS ───────────────────────────────────────────────────────────
+const PLATAFORMAS = [
+  { id:'cuevana3', nombre:'Cuevana 3', icono:'🎞️', desc:'Una de las más completas. Películas y series en latino HD.', url:'https://www.cuevana3.me', buscar:'https://www.cuevana3.me/?s=', tag:'gratis', tagLabel:'GRATIS', tipo:['todo','pelicula','serie','gratis'], color:'#e8001c' },
+  { id:'pelismart', nombre:'Pelismart', icono:'🍿', desc:'Catálogo enorme actualizado. Excelente en Latino.', url:'https://pelismart.com', buscar:'https://pelismart.com/?s=', tag:'gratis', tagLabel:'GRATIS', tipo:['todo','pelicula','serie','gratis'], color:'#ff6b00' },
+  { id:'gnula', nombre:'Gnula', icono:'🌐', desc:'Series completas y películas recién estrenadas en latino.', url:'https://gnula.nu', buscar:'https://gnula.nu/?s=', tag:'gratis', tagLabel:'GRATIS', tipo:['todo','pelicula','serie','gratis'], color:'#00b4d8' },
+  { id:'repelis24', nombre:'Repelis24', icono:'📽️', desc:'Gran catálogo de películas en castellano latino.', url:'https://repelis24.rs', buscar:'https://repelis24.rs/?s=', tag:'gratis', tagLabel:'GRATIS', tipo:['todo','pelicula','gratis'], color:'#7b2fff' },
+  { id:'sololatino', nombre:'SoloLatino', icono:'🌎', desc:'Series y animes exclusivamente en español latino.', url:'https://sololatino.net', buscar:'https://sololatino.net/?s=', tag:'gratis', tagLabel:'GRATIS', tipo:['todo','serie','gratis'], color:'#00c864' },
+  { id:'pluto', nombre:'Pluto TV', icono:'📡', desc:'TV en vivo y películas. 100% gratis y legal. Canal latino.', url:'https://pluto.tv/es', buscar:'https://pluto.tv/es/search?q=', tag:'gratis', tagLabel:'GRATIS · LEGAL', tipo:['todo','pelicula','serie','gratis'], color:'#ff9500' },
+  { id:'tubi', nombre:'Tubi TV', icono:'📺', desc:'Streaming gratuito y legal con buen catálogo latino.', url:'https://tubitv.com', buscar:'https://tubitv.com/search/', tag:'gratis', tagLabel:'GRATIS · LEGAL', tipo:['todo','pelicula','serie','gratis'], color:'#ff4400' },
+  { id:'youtube', nombre:'YouTube', icono:'▶️', desc:'Películas completas oficiales y gratuitas en latino.', url:'https://www.youtube.com/results?search_query=pelicula+completa+espanol+latino', buscar:'https://www.youtube.com/results?search_query=', tag:'gratis', tagLabel:'GRATIS', tipo:['todo','pelicula','gratis'], color:'#ff0000' },
+  { id:'netflix', nombre:'Netflix', icono:'🔴', desc:'El gigante. Todo con audio y subtítulos en latino.', url:'https://www.netflix.com', buscar:'https://www.netflix.com/search?q=', tag:'premium', tagLabel:'SUSCRIPCIÓN', tipo:['todo','pelicula','serie'], color:'#e50914' },
+  { id:'prime', nombre:'Prime Video', icono:'🟦', desc:'Amazon Prime. Gran catálogo con doblaje latino.', url:'https://www.primevideo.com', buscar:'https://www.primevideo.com/search/ref=atv_sr_sug_1?phrase=', tag:'premium', tagLabel:'SUSCRIPCIÓN', tipo:['todo','pelicula','serie'], color:'#00a8e1' },
+  { id:'disney', nombre:'Disney+', icono:'✨', desc:'Disney, Marvel, Star Wars, Pixar. Latino incluido.', url:'https://www.disneyplus.com', buscar:'https://www.disneyplus.com/search?q=', tag:'premium', tagLabel:'SUSCRIPCIÓN', tipo:['todo','pelicula','serie'], color:'#0063e5' },
+  { id:'max', nombre:'Max (HBO)', icono:'🎭', desc:'HBO, Warner, DC. Contenido premium con latino.', url:'https://www.max.com', buscar:'https://www.max.com/search?q=', tag:'premium', tagLabel:'SUSCRIPCIÓN', tipo:['todo','pelicula','serie'], color:'#6200ea' },
+];
+
+const NOVEDADES = [
+  { titulo:'Dune: Parte Dos', emoji:'🏜️', plat:'Prime Video', tipo:'peli', url:'https://www.primevideo.com/search/ref=atv_sr_sug_1?phrase=dune+parte+dos' },
+  { titulo:'The Last of Us T2', emoji:'🍄', plat:'Max (HBO)', tipo:'serie', url:'https://www.max.com/search?q=the+last+of+us' },
+  { titulo:'Arcane T2', emoji:'⚡', plat:'Netflix', tipo:'serie', url:'https://www.netflix.com/search?q=arcane' },
+  { titulo:'Alien: Romulus', emoji:'👾', plat:'Disney+', tipo:'peli', url:'https://www.disneyplus.com/search?q=alien+romulus' },
+  { titulo:'Deadpool & Wolverine', emoji:'🦸', plat:'Disney+', tipo:'peli', url:'https://www.disneyplus.com/search?q=deadpool+wolverine' },
+  { titulo:'Juego de Tronos: La Casa del Dragón', emoji:'🐉', plat:'Max (HBO)', tipo:'serie', url:'https://www.max.com/search?q=casa+del+dragon' },
+  { titulo:'Civil War', emoji:'📸', plat:'Cuevana 3', tipo:'peli', url:'https://www.cuevana3.me/?s=civil+war' },
+  { titulo:'Fallout', emoji:'☢️', plat:'Prime Video', tipo:'serie', url:'https://www.primevideo.com/search/ref=atv_sr_sug_1?phrase=fallout' },
+  { titulo:'Furiosa', emoji:'🔥', plat:'Max (HBO)', tipo:'peli', url:'https://www.max.com/search?q=furiosa' },
+  { titulo:'Shogun', emoji:'⚔️', plat:'Disney+', tipo:'serie', url:'https://www.disneyplus.com/search?q=shogun' },
+];
+
+// ─── ESTADO ──────────────────────────────────────────────────────────
+let filtroActivo = 'todo';
+let modoTV = false;
+
+function cargarFavs() {
+  try { return JSON.parse(localStorage.getItem('cl_favs') || '[]'); } catch{ return []; }
+}
+function guardarFavs(f) {
+  try { localStorage.setItem('cl_favs', JSON.stringify(f)); } catch{}
+}
+function cargarHistorial() {
+  try { return JSON.parse(localStorage.getItem('cl_hist') || '[]'); } catch{ return []; }
+}
+function guardarHistorial(h) {
+  try { localStorage.setItem('cl_hist', JSON.stringify(h)); } catch{}
+}
+
+// ─── MODO TV ─────────────────────────────────────────────────────────
+function toggleTV() {
+  modoTV = !modoTV;
+  document.body.classList.toggle('modo-tv', modoTV);
+  document.getElementById('btnTV').classList.toggle('activo', modoTV);
+  mostrarToast(modoTV ? '📺 Modo TV activado' : '🖥️ Modo TV desactivado');
+}
+
+// ─── NOVEDADES ───────────────────────────────────────────────────────
+function renderNovedades() {
+  const c = document.getElementById('novedadesScroll');
+  c.innerHTML = NOVEDADES.map(n => `
+    <a href="${n.url}" target="_blank" class="novedad-card" tabindex="0">
+      <span class="novedad-emoji">${n.emoji}</span>
+      <div class="novedad-titulo">${n.titulo}</div>
+      <div class="novedad-plat">${n.plat}</div>
+      <span class="novedad-tipo ${n.tipo === 'peli' ? 'peli' : 'serie'}">
+        ${n.tipo === 'peli' ? '🎬 PELÍCULA' : '📺 SERIE'}
+      </span>
+    </a>
+  `).join('');
+}
+
+// ─── PLATAFORMAS ─────────────────────────────────────────────────────
+function renderPlataformas() {
+  const favs = cargarFavs();
+  let lista = PLATAFORMAS.filter(p => {
+    if (filtroActivo === 'favorito') return favs.includes(p.id);
+    return p.tipo.includes(filtroActivo);
+  });
+  // Favoritos primero
+  lista.sort((a,b) => {
+    const af = favs.includes(a.id), bf = favs.includes(b.id);
+    return (bf ? 1 : 0) - (af ? 1 : 0);
+  });
+
+  const grid = document.getElementById('gridPlataformas');
+  if (lista.length === 0) {
+    grid.innerHTML = `<div style="color:var(--apagado);padding:20px;font-size:1.1rem;">
+      No tenés favoritos todavía. Hacé clic en ⭐ en cualquier plataforma.
+    </div>`;
+    return;
+  }
+
+  grid.innerHTML = lista.map((p, i) => {
+    const esFav = favs.includes(p.id);
+    return `
+    <div class="plat-card" style="--ac:${p.color}; animation-delay:${i*0.04}s">
+      <div class="plat-top">
+        <span class="plat-icon">${p.icono}</span>
+        <button class="btn-fav ${esFav ? 'activo' : ''}"
+          onclick="toggleFav('${p.id}', event)"
+          title="${esFav ? 'Quitar de favoritos' : 'Agregar a favoritos'}"
+          tabindex="0">⭐</button>
+      </div>
+      <div class="plat-nombre">${p.nombre}</div>
+      <div class="plat-desc">${p.desc}</div>
+      <div class="plat-footer">
+        <span class="plat-tag ${p.tag}">${p.tagLabel}</span>
+        <a href="${p.url}" target="_blank" class="plat-abrir" tabindex="0"
+           onclick="event.stopPropagation()">
+          ABRIR →
+        </a>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggleFav(id, e) {
+  e.preventDefault(); e.stopPropagation();
+  const favs = cargarFavs();
+  const idx = favs.indexOf(id);
+  if (idx >= 0) {
+    favs.splice(idx, 1);
+    mostrarToast('❌ Quitado de favoritos');
+  } else {
+    favs.push(id);
+    mostrarToast('⭐ Agregado a favoritos');
+  }
+  guardarFavs(favs);
+  renderPlataformas();
+}
+
+// ─── FILTROS ─────────────────────────────────────────────────────────
+function setFiltro(btn, f) {
+  document.querySelectorAll('.filtro-btn').forEach(b => b.classList.remove('activo'));
+  btn.classList.add('activo');
+  filtroActivo = f;
+  renderPlataformas();
+  // Ocultar resultados al cambiar filtro
+  document.getElementById('panelResultados').style.display = 'none';
+  document.getElementById('sepResultados').style.display = 'none';
+}
+
+// ─── BUSCAR ──────────────────────────────────────────────────────────
+function buscar() {
+  const q = document.getElementById('campoBusqueda').value.trim();
+  if (!q) { mostrarToast('✏️ Escribí algo para buscar'); return; }
+
+  // Guardar en historial
+  let hist = cargarHistorial();
+  hist = [q, ...hist.filter(h => h.toLowerCase() !== q.toLowerCase())].slice(0, 8);
+  guardarHistorial(hist);
+  renderHistorial();
+
+  const enc = encodeURIComponent(q);
+  const disponibles = filtroActivo === 'favorito'
+    ? PLATAFORMAS.filter(p => cargarFavs().includes(p.id))
+    : PLATAFORMAS.filter(p => p.tipo.includes(filtroActivo));
+
+  document.getElementById('resSubtitulo').textContent = `"${q}" — ${disponibles.length} plataformas`;
+
+  document.getElementById('listaLinks').innerHTML = disponibles.map((p, i) => `
+    <a href="${p.buscar}${enc}" target="_blank" class="link-card" tabindex="0"
+       style="animation-delay:${i*0.04}s">
+      <span class="link-icon">${p.icono}</span>
+      <div class="link-info">
+        <strong>${p.nombre}</strong>
+        <small>Buscar "${q}" en ${p.nombre}</small>
+      </div>
+      <span class="link-flecha">→</span>
+    </a>
+  `).join('');
+
+  const panel = document.getElementById('panelResultados');
+  const sep = document.getElementById('sepResultados');
+  panel.style.display = 'block';
+  sep.style.display = 'block';
+  panel.scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
+// ─── HISTORIAL ───────────────────────────────────────────────────────
+function renderHistorial() {
+  const hist = cargarHistorial();
+  const wrap = document.getElementById('historialWrap');
+  const chips = document.getElementById('historialChips');
+  if (hist.length === 0) { wrap.style.display = 'none'; return; }
+  wrap.style.display = 'block';
+  chips.innerHTML = hist.map(h => `
+    <div class="chip-historial" tabindex="0"
+         onclick="buscarDesdeHistorial('${h.replace(/'/g,"\\'")}')">
+      🕐 ${h}
+      <span class="chip-x" onclick="borrarHistorial('${h.replace(/'/g,"\\'")}', event)" title="Borrar">✕</span>
+    </div>
+  `).join('');
+}
+
+function buscarDesdeHistorial(q) {
+  document.getElementById('campoBusqueda').value = q;
+  buscar();
+}
+
+function borrarHistorial(q, e) {
+  e.stopPropagation();
+  let hist = cargarHistorial().filter(h => h !== q);
+  guardarHistorial(hist);
+  renderHistorial();
+}
+
+// ─── TOAST ───────────────────────────────────────────────────────────
+let toastTimer;
+function mostrarToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+// ─── TECLADO (Enter en buscador) ─────────────────────────────────────
+document.getElementById('campoBusqueda').addEventListener('keydown', e => {
+  if (e.key === 'Enter') buscar();
+});
+
+// ─── INIT ─────────────────────────────────────────────────────────────
+renderNovedades();
+renderPlataformas();
+renderHistorial();
+</script>
+</body>
+</html>
